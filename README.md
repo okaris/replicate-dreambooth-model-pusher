@@ -4,10 +4,31 @@ This [Cog](https://github.com/replicate/cog) model allows you to easily push tra
 
 ## Usage
 
-To use the [DreamBooth API](https://replicate.com/blog/dreambooth-api), you will need to provide the following information:
+1. First clone the repo and follow the instructions [here](https://replicate.com/docs/guides/push-a-model) to push your model to Replicate using Cog
 
-**Input weights:** These are the trained model weights that will be used to train the model. They must be provided in the form of a zip file, containing the model's weights.
-Once you have provided the required information, you can call the API using a standard HTTP request. The API will then return a trained model that you can use in your application.
+You will receive a `version` of the new model you have created from Cog
+
+Then use the [Replicate DreamBooth API](https://replicate.com/blog/dreambooth-api) to push a model with your trained weights.
+
+You will need to pass the `url` of the zipped weights as the input for the Replicate DreamBooth API
+
+
+```
+curl -X POST \
+    -H "Authorization: Token $REPLICATE_API_TOKEN" \
+    -H "Content-Type: application/json" \
+    -d '{
+            "input": {
+                "instance_prompt": "$WEIGHTS_URL"
+            },
+            "model": "yourusername/yourmodel",
+            "trainer_version": "$MODEL_VERSION",
+            "webhook_completed": "https://example.com/dreambooth-webhook"
+        }' \
+    https://dreambooth-api-experimental.replicate.com/v1/trainings
+```
+
+The API will then call your webhook with a version of your trained model pushed to Replicate cluster that you can use in your application.
 
 ## More information
 
